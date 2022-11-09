@@ -29,14 +29,16 @@ _PRODUCT_DF = pd.DataFrame({'product_name': ['Chocolate', 'Granizado', 'Limon', 
 
 
 def is_product_available(product_name, quantity):  # EJERCICIO NUMERO 2
-    # Condiciono el DataFrame y lo convierto en un diccionario indexado con los parametros convertidos en llave valor: 'Chocolate': [3] para poder condicionar
-    # El input del usuario. Si la condicion se cumple retorno True, si no, es asi retorna False
+    # remplazo el valor de "Dulce de Leche" para no tener errores al filtrar el input del usuario.
+    # Condiciono el DataFrame y lo convierto en un diccionario, con los parametros convertidos en llave valor: "" 'Chocolate': [3] "" condiciono
+    # el input del usuario. Si la condicion se cumple retorno True si no retorna False
+    _PRODUCT_DF['product_name'] =  _PRODUCT_DF['product_name'].replace(['Dulce de Leche'], ['Dulce De Leche'])
     filtro = _PRODUCT_DF[(_PRODUCT_DF['product_name'] == product_name) & (
         _PRODUCT_DF['quantity'] >= quantity)].set_index('product_name').T.to_dict('list')
+    print(filtro)
     if filtro:
         return True
     else:
-        print('No tenemos Stock de ese sabor.')
         return False
 
 
@@ -45,6 +47,9 @@ _AVAILABLE_DISCOUNT_CODES = ['Primavera2021',
 
 
 def validate_discount_code(discount_code):  # EJERCICIO NUMERO 3
+    # Con los string de la lista del ejercicio 3, los guardo en la variable Validos con ningún carácter igual y los agrego nuevamente a una lista para
+    # recorrer los caracteres. Comparo el código mencionado del usuario y códigos válidos para saber si las diferencias de los caracteres es menor a 3
+    # Si esto se cumple la función retorna True y si no es asi retorna False
     codigo_validos = []
     for i in range(len(_AVAILABLE_DISCOUNT_CODES)):
         validos = "".join(set(_AVAILABLE_DISCOUNT_CODES[i]))
@@ -63,7 +68,9 @@ def validate_discount_code(discount_code):  # EJERCICIO NUMERO 3
             resultado.append(True)
     return any(resultado)       
 
-def main():  # Respuestas y Inputs del Bot
+
+def main():  
+    # Respuestas y Inputs del Bot
     if GeoAPI.is_hot_in_pehuajo == True:
         print(
             f'\nMe derrito! ¿Me invitas un Helado?\n\nBienvenid@ a Heladeria Fronzen\n\nAqui tienes nuestros Sabores!\n\n{[_PRODUCT_DF]}\n')
@@ -71,10 +78,10 @@ def main():  # Respuestas y Inputs del Bot
         print(
             f'\nParece que esta fresquito, che... ¡Que mejor momento para comer un helado!\n\nBienvenid@ a Heladeria Fronzen\n\nAqui tienes nuestros Sabores!\n\n{[_PRODUCT_DF]}\n')
     limite = 0
-    while (limite <= 4):
+    while limite <= 4:
         try:
             limite += 1
-            sabor = input('¿Qué gusto de helado vas a pedir?\n').capitalize()
+            sabor = input('¿Qué gusto de helado vas a pedir?\n').title()
             cantidad = int(input('\n¿Cuantos helados vas a llevar?\n'))
             if cantidad <= 0:
                 cantidad = int(input('\nIngrese una cantidad correcta ¿Cuantos helados vas a llevar?\n'))
@@ -92,19 +99,19 @@ def main():  # Respuestas y Inputs del Bot
                         print("¡Pedido Confirmado! Gracias por tu compra")
                         break
                     else:
-                        print(f'Ingrese un cupon valido!\n\n¡Intentos: {limite} de 4!\n')
+                        print(f'Ingrese un cupon valido!\n\n¡Intentos: {limite} de 5!\n')
                         if limite == 5:
                             print(
                                 "¡Codigo Invalido!\n¡Pedido Confirmado! Gracias por tu compra")
                             break
                 break
             else:
-                print(f'Ingrese unos de los sabores disponibles!\n\n{[_PRODUCT_DF]}\n¡Intentos: {limite} de 4!\n')
+                print(f'No tenemos Stock de ese Sabor. Ingrese uno de los disponibles!\n\n{[_PRODUCT_DF]}\n¡Intentos: {limite} de 5!\n')
                 if limite == 5:
                     print("¡Vuelva a intentarlo cuando tengamos Stock! Hasta PRONTO!!")
                     break
         except:
-            print(f'Ingrese unos de los sabores disponibles!\n\n{[_PRODUCT_DF]}\n¡Intentos: {limite} de 4!\n')
+            print(f'Ingrese unos de los sabores disponibles!\n\n{[_PRODUCT_DF]}\n¡Intentos: {limite} de 5!\n')
             if limite == 5:
                 print("¡Vuelva a intentarlo cuando tengamos Stock! Hasta PRONTO!!")
                 break
